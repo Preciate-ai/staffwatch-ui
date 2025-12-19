@@ -1,0 +1,110 @@
+import { useMutation } from "@tanstack/react-query";
+import http from "@/services/base";
+import { setCookie } from "nookies";
+import { routes } from "@/services/routes";
+import {
+    LoginPayloadInterface,
+    LoginResultInterface,
+    ForgotPasswordPayloadInterface,
+    ResetPasswordPayloadInterface,
+    LogoutPayloadInterface,
+    VerifyPayloadInterface,
+} from "@/interfaces/auth.interfaces";
+import { cookieKey, useAuthStore } from "@/stores/auth.store";
+
+export const useLogin = () => {
+    const { setAccount, setAccess, setOrganization } = useAuthStore();
+
+    return useMutation({
+        mutationFn: async (payload: LoginPayloadInterface) => {
+            const data = await http.post({
+                url: routes.auth.login,
+                body: payload,
+            });
+            return data as LoginResultInterface;
+        },
+        onSuccess: (data) => {
+            setAccount(data.account);
+            setAccess(data.credentials);
+            if (data.organization) {
+                setOrganization(data.organization);
+            }
+            setCookie(null, cookieKey, data.credentials.access.token, {
+                path: "/",
+            });
+        },
+    });
+};
+
+export const useRegister = () => {
+    return useMutation({
+        mutationFn: async (payload: any) => {
+            const data = await http.post({
+                url: routes.auth.register,
+                body: payload,
+            });
+            return data as LoginResultInterface;
+        },
+    });
+};
+
+export const useVerify = () => {
+    const { setAccount, setAccess, setOrganization } = useAuthStore();
+
+    return useMutation({
+        mutationFn: async (payload: VerifyPayloadInterface) => {
+            const data = await http.post({
+                url: routes.auth.verify,
+                body: payload,
+            });
+            return data as LoginResultInterface;
+        },
+        onSuccess: (data) => {
+            setAccount(data.account);
+            setAccess(data.credentials);
+            if (data.organization) {
+                setOrganization(data.organization);
+            }
+            setCookie(null, cookieKey, data.credentials.access.token, {
+                path: "/",
+            });
+        },
+    });
+};
+
+export const useForgotPassword = () => {
+    return useMutation({
+        mutationFn: async (payload: ForgotPasswordPayloadInterface) => {
+            return await http.post({
+                url: routes.auth.forgotPassword,
+                body: payload,
+            });
+        },
+    });
+};
+
+export const useResetPassword = () => {
+    return useMutation({
+        mutationFn: async (payload: ResetPasswordPayloadInterface) => {
+            return await http.post({
+                url: routes.auth.resetPassword,
+                body: payload,
+            });
+        },
+    });
+};
+
+export const useLogout = () => {
+    return useMutation({
+        mutationFn: async (payload: LogoutPayloadInterface) => {
+            return await http.post({
+                url: routes.auth.logout,
+                body: payload,
+            });
+        },
+        onSuccess: () => {
+            localStorage.clear();
+            window.location.href = "/login";
+        },
+    });
+};

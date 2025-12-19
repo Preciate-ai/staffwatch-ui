@@ -13,10 +13,10 @@ export const signupSchema = Yup.object().shape({
     name: Yup.string()
         .min(2, "Name must be at least 2 characters")
         .required("Full name is required"),
-    companyName: Yup.string()
-        .min(2, "Company name must be at least 2 characters")
-        .required("Company name is required"),
-    email: Yup.string()
+    organizationName: Yup.string()
+        .min(2, "Organization name must be at least 2 characters")
+        .required("Organization name is required"),
+    workEmail: Yup.string()
         .email("Invalid email address")
         .required("Work email is required"),
     password: Yup.string()

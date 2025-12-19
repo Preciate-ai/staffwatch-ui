@@ -7,17 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { loginSchema } from "@/validators/auth";
+import { useLogin } from "@/services/auth.services";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+    const loginMutation = useLogin();
+    const router = useRouter();
     const formik = useFormik({
         initialValues: {
             email: "",
             password: "",
         },
         validationSchema: loginSchema,
-        onSubmit: (values) => {
-            console.log(values);
-            // Handle login logic here
+        onSubmit: async (values) => {
+            await loginMutation.mutateAsync(values);
+            router.push("/dashboard");
         },
     });
 
@@ -56,7 +60,9 @@ export default function LoginPage() {
                     </div>
                 </CardContent>
                 <CardFooter className="flex flex-col gap-4">
-                    <Button type="submit" className="w-full">Sign In</Button>
+                    <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                        {loginMutation.isPending ? "Signing in..." : "Sign In"}
+                    </Button>
                     <div className="text-center text-sm text-muted-foreground">
                         <Link href="/forgot-password" className="hover:text-primary underline underline-offset-4">
                             Forgot your password?

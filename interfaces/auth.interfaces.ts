@@ -1,0 +1,74 @@
+export interface LoginPayloadInterface {
+    email: string;
+    password: string;
+}
+
+export interface VerifyPayloadInterface {
+    email: string;
+    otp: string;
+}
+
+export interface LoginResultInterface {
+    account: Account;
+    organization?: Organization | null;
+    credentials: Access;
+}
+
+export interface RefreshTokensPayloadInterface {
+    refreshToken: string;
+}
+
+export interface ForgotPasswordPayloadInterface {
+    email: string;
+}
+
+export interface ResetPasswordPayloadInterface {
+    password: string;
+    code: string;
+}
+
+export interface LogoutPayloadInterface {
+    refreshToken: string;
+}
+
+export interface Organization {
+    id: string;
+    name: string;
+}
+
+
+export interface Account {
+    id: string;
+    name: string;
+    email: string;
+    role: "client" | "internal";
+}
+
+export interface QueryResult {
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalResults: number;
+}
+export interface TokenPayload {
+    token: string;
+    expires: Date;
+}
+
+export interface Access {
+    access: TokenPayload;
+    refresh: TokenPayload;
+}
+
+export interface authStore {
+    access?: TokenPayload;
+    refresh?: TokenPayload;
+    account?: Account;
+    organization?: Organization;
+}
+
+export interface IAuthStore extends authStore {
+    setAccount: (payload: Account) => void;
+    setAccess: (payload: Access) => void;
+    setOrganization: (payload: Organization) => void;
+}

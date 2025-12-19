@@ -7,19 +7,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { signupSchema } from "@/validators/auth";
+import { useRegister } from "@/services/auth.services";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+    const registerMutation = useRegister();
+    const router = useRouter();
+
     const formik = useFormik({
         initialValues: {
             name: "",
-            companyName: "",
-            email: "",
+            organizationName: "",
+            workEmail: "",
             password: "",
         },
         validationSchema: signupSchema,
-        onSubmit: (values) => {
-            console.log(values);
-            // Handle signup logic here
+        onSubmit: async (values) => {
+            await registerMutation.mutateAsync(values);
+            const encodedEmail = encodeURIComponent(values.workEmail);
+            router.push(`/verify?email=${encodedEmail}`);
         },
     });
 
@@ -46,27 +52,27 @@ export default function SignupPage() {
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="companyName">Company Name</Label>
+                        <Label htmlFor="organizationName">Company Name</Label>
                         <Input
-                            id="companyName"
+                            id="organizationName"
                             type="text"
                             placeholder="Acme Inc."
-                            {...formik.getFieldProps("companyName")}
+                            {...formik.getFieldProps("organizationName")}
                         />
-                        {formik.touched.companyName && formik.errors.companyName && (
-                            <div className="text-sm text-red-500">{formik.errors.companyName}</div>
+                        {formik.touched.organizationName && formik.errors.organizationName && (
+                            <div className="text-sm text-red-500">{formik.errors.organizationName}</div>
                         )}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Work Email</Label>
+                        <Label htmlFor="workEmail">Work Email</Label>
                         <Input
-                            id="email"
+                            id="workEmail"
                             type="email"
                             placeholder="john@acme.com"
-                            {...formik.getFieldProps("email")}
+                            {...formik.getFieldProps("workEmail")}
                         />
-                        {formik.touched.email && formik.errors.email && (
-                            <div className="text-sm text-red-500">{formik.errors.email}</div>
+                        {formik.touched.workEmail && formik.errors.workEmail && (
+                            <div className="text-sm text-red-500">{formik.errors.workEmail}</div>
                         )}
                     </div>
                     <div className="grid gap-2">
@@ -82,7 +88,9 @@ export default function SignupPage() {
                     </div>
                 </CardContent>
                 <CardFooter className="flex flex-col gap-4">
-                    <Button type="submit" className="w-full">Create Account</Button>
+                    <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
+                        {registerMutation.isPending ? "Creating Account..." : "Create Account"}
+                    </Button>
                     <div className="text-center text-sm text-muted-foreground">
                         Already have an account?{" "}
                         <Link href="/login" className="hover:text-primary underline underline-offset-4">
