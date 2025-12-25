@@ -14,9 +14,13 @@ export const routes = {
     },
     projects: {
         index: "/projects",
-        sendInvite: "/projects/send-invite",
+        invite: "/invite", // Used as suffix
     },
     users: {
         index: "/users",
+    },
+    sessions: {
+        index: "/sessions",
+        aggregated: "/aggregated",
     },
 }

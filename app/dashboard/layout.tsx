@@ -1,44 +1,24 @@
+"use client"
 import {
     SidebarProvider,
-    SidebarTrigger,
+    SidebarInset,
 } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { AppSidebar } from "./_components/app-sidebar"
+import { usePathname } from "next/navigation"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname()
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="flex flex-1 flex-col bg-muted/10">
-                <header className="flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sticky top-0 bg-background z-10 px-4">
-                    <div className="flex items-center gap-2">
-                        <SidebarTrigger size={"icon"} className="-ml-1" />
-                        <Separator orientation="vertical" className="mr-2 h-4" />
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="#">
-                                        Dashboard
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Page</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </div>
-                </header>
-                <div className="p-4 lg:p-6">{children}</div>
-            </main>
+            <SidebarInset className="bg-muted/10 overflow-x-hidden flex flex-col h-full">
+                <div key={pathname}
+                    className="flex-1 overflow-y-auto w-full h-full transition-all duration-300 animate-fadeIn"
+                    id="scrollable-container"
+                >
+                    {children}
+                </div>
+            </SidebarInset>
         </SidebarProvider>
     )
 }

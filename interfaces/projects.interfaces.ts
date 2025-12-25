@@ -1,0 +1,74 @@
+export interface CreateProjectPayload {
+    name: string;
+    description?: string;
+    // Add other fields as necessary
+}
+
+export interface InviteUserPayload {
+    email: string;
+    role: string;
+    // Add other fields as necessary
+}
+
+export enum ProjectStatus {
+    ACTIVE = 'active',
+    ARCHIVED = 'archived',
+}
+
+export interface IProject {
+    name: string;
+    description: string;
+    organizationId: string;
+    status: ProjectStatus;
+}
+
+export interface Project extends IProject {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ProjectDetails extends Project {
+    staffCount: number;
+    managerCount: number;
+    membersCount: number;
+}
+
+export interface GetProjectsResponse {
+    results: Project[];
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalResults: number;
+}
+export interface ProjectMember {
+    id: string;
+    userId: string;
+    projectId: string;
+    role: string;
+    status: string;
+    createdAt: string;
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        avatar?: string;
+    };
+}
+
+export interface GetProjectMembersQuery {
+    role?: string;
+    status?: string;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+    search?: string;
+}
+
+export interface GetProjectMembersResponse {
+    results: ProjectMember[];
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalResults: number;
+}

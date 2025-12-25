@@ -140,10 +140,14 @@ class HttpFacade {
                     const response = await this.http.post("/auth/refresh-tokens", {
                         refreshToken: refresh?.token,
                     });
-                    const newTokens = response.data.data.credentials;
+                    const newTokens = response.data.credentials;
+                    const newUser = response.data.user;
+                    const newOrganization = response.data.organization;
                     useAuthStore.setState({
                         access: newTokens.access,
                         refresh: newTokens.refresh,
+                        account: newUser,
+                        organization: newOrganization,
                     });
                     processQueue(null, newTokens.access.token);
                     resolve(newTokens.access.token);
@@ -174,7 +178,7 @@ class HttpFacade {
                         } else {
                             redirect("/logout");
                         }
-                    } else if (response.data.code === 111 && !originalRequest._retry) {
+                    } else if (response.data.code === 401 && !originalRequest._retry) {
                         // expired access token
                         originalRequest._retry = true;
                         try {

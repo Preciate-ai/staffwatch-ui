@@ -129,3 +129,251 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+/* Organic glow animations - like water or air spreading */
+@keyframes glow-spread {
+
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 0.25;
+  }
+
+  33% {
+    transform: scale(1.05) translate(-2px, 3px) rotate(1deg);
+    opacity: 0.3;
+  }
+
+  66% {
+    transform: scale(0.98) translate(3px, -1px) rotate(-0.5deg);
+    opacity: 0.28;
+  }
+}
+
+@keyframes glow-drift {
+
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 0.15;
+  }
+
+  25% {
+    transform: scale(1.08) translate(-4px, 2px) rotate(0.8deg);
+    opacity: 0.18;
+  }
+
+  50% {
+    transform: scale(1.02) translate(2px, -3px) rotate(-0.3deg);
+    opacity: 0.12;
+  }
+
+  75% {
+    transform: scale(1.06) translate(1px, 4px) rotate(0.5deg);
+    opacity: 0.16;
+  }
+}
+
+@keyframes glow-ambient {
+
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 0.1;
+  }
+
+  20% {
+    transform: scale(1.03) translate(-1px, 2px) rotate(0.2deg);
+    opacity: 0.12;
+  }
+
+  40% {
+    transform: scale(0.97) translate(3px, -1px) rotate(-0.4deg);
+    opacity: 0.08;
+  }
+
+  60% {
+    transform: scale(1.01) translate(-2px, 1px) rotate(0.1deg);
+    opacity: 0.11;
+  }
+
+  80% {
+    transform: scale(1.04) translate(1px, -2px) rotate(-0.2deg);
+    opacity: 0.09;
+  }
+}
+
+/* Floating animation for particles */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+
+  66% {
+    transform: translateY(5px) rotate(-0.5deg);
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle slide up animation */
+@keyframes subtleSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Text reveal animation */
+@keyframes textReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: translateY(-5px) scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Glitch effect for dramatic text */
+@keyframes glitch {
+
+  0%,
+  100% {
+    transform: translate(0);
+  }
+
+  10% {
+    transform: translate(-2px, -1px);
+  }
+
+  20% {
+    transform: translate(2px, 1px);
+  }
+
+  30% {
+    transform: translate(-1px, 2px);
+  }
+
+  40% {
+    transform: translate(1px, -2px);
+  }
+
+  50% {
+    transform: translate(-2px, 1px);
+  }
+
+  60% {
+    transform: translate(2px, -1px);
+  }
+
+  70% {
+    transform: translate(-1px, -2px);
+  }
+
+  80% {
+    transform: translate(1px, 2px);
+  }
+
+  90% {
+    transform: translate(-2px, -1px);
+  }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-glow-spread {
+  animation: glow-spread 6s ease-in-out infinite;
+}
+
+.animate-glow-drift {
+  animation: glow-drift 9s ease-in-out infinite;
+}
+
+.animate-glow-ambient {
+  animation: glow-ambient 12s ease-in-out infinite;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.5s ease-out;
+}
+
+.animate-subtle-slide-up {
+  animation: subtleSlideUp 0.4s ease-out forwards;
+}
+
+.animate-textReveal {
+  animation: textReveal 0.8s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glitch {
+  animation: glitch 0.3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
+  background-size: 200% 100%;
+}

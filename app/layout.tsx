@@ -21,9 +21,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${outfit.variable} font-sans antialiased`}
       >
-        <Providers>
-          {children}
-        </Providers>
+        <div className="flex flex-col min-h-screen">
+          <Providers>
+            {children}
+          </Providers>
+        </div>
       </body>
     </html>
   );

@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Sidebar,
     SidebarContent,
@@ -10,7 +12,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboard, FolderKanban, Users, LogOut, ChevronUp, User } from "lucide-react"
+import { LayoutDashboard, FolderKanban, Users, LogOut, ChevronUp, User, Clock, DollarSign, Calendar, Settings } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,6 +20,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Logo } from "@/components/ui/logo"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
 
 // Menu items.
 const items = [
@@ -32,13 +36,38 @@ const items = [
         icon: FolderKanban,
     },
     {
-        title: "Users",
-        url: "/dashboard/users",
+        title: "Staff",
+        url: "/dashboard/staff",
         icon: Users,
+    },
+    {
+        title: "Timesheets",
+        url: "/dashboard/timesheets",
+        icon: Clock,
+    },
+    {
+        title: "PTO Requests",
+        url: "/dashboard/pto-requests",
+        icon: Calendar,
+    },
+    {
+        title: "Payroll",
+        url: "/dashboard/payroll",
+        icon: DollarSign,
+    },
+]
+
+const configMenuItems = [
+    {
+        title: "Settings",
+        url: "/dashboard/settings",
+        icon: Settings,
     },
 ]
 
 export function AppSidebar() {
+    const pathname = usePathname()
+
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
@@ -52,16 +81,45 @@ export function AppSidebar() {
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild tooltip={item.title}>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {items.map((item) => {
+                                const isActive = item.url === "/dashboard"
+                                    ? pathname === "/dashboard"
+                                    : pathname === item.url || pathname?.startsWith(`${item.url}/`);
+
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                                            <Link href={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                )
+                            })}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                    <SidebarGroupLabel>Configurations</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {configMenuItems.map((item) => {
+                                const isActive = item.url === "/dashboard"
+                                    ? pathname === "/dashboard"
+                                    : pathname === item.url || pathname?.startsWith(`${item.url}/`);
+
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
+                                            <Link href={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                )
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
