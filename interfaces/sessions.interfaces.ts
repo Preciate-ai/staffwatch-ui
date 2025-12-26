@@ -6,10 +6,13 @@ export interface GetAggregatedSessionsQuery {
 }
 
 export interface AggregatedSession {
+    day: string;
     date: string;
     totalDurationMs: number;
     sessionCount: number;
-    totalHours: number;
+    duration: number;
+    activityRate: number;
+    screenshots: { url: string, timestamp: number }[];
 }
 
 export type GetAggregatedSessionsResponse = AggregatedSession[];
