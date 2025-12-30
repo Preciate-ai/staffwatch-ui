@@ -1,14 +1,18 @@
+"use client"
 import { PageHeader } from "@/components/page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, FolderKanban, Activity, DollarSign } from "lucide-react";
 
+import { useParams } from "next/navigation";
+
 export default function DashboardPage() {
+    const params = useParams();
     return (
         <div className="flex flex-col h-full w-full">
             <PageHeader
                 title="Overview"
                 breadcrumbs={[
-                    { label: "Dashboard", href: "/dashboard", active: true }
+                    { label: "Dashboard", href: `/${params?.orgId}`, active: true }
                 ]}
             />
             <div className="p-4 lg:p-6 space-y-6">

@@ -22,6 +22,7 @@ import { CreateProjectDialog } from "./create-project-dialog";
 import { Badge } from "@/components/ui/badge";
 import TablePagination from "@/components/ui/table-pagination";
 import { PageHeader } from "@/components/page-header";
+import { useWorkspace } from "@/components/providers/workspace-provider";
 
 export default function ProjectsPage() {
     const router = useRouter();
@@ -32,12 +33,15 @@ export default function ProjectsPage() {
 
     const debouncedSearch = useDebounce(search, 500);
 
+    const { activeOrgId } = useWorkspace();
+
     // Reset page when search changes
     useEffect(() => {
         setPage(1);
     }, [debouncedSearch]);
 
     const { data: projectsData, isLoading } = useGetProjects({
+        organizationId: activeOrgId,
         search: debouncedSearch,
         page,
         limit: rowsPerPage
@@ -149,8 +153,8 @@ export default function ProjectsPage() {
             <PageHeader
                 title="Projects"
                 breadcrumbs={[
-                    { label: "Dashboard", href: "/dashboard", active: false },
-                    { label: "Projects", href: "/dashboard/projects", active: true },
+                    { label: "Dashboard", href: `/${activeOrgId}`, active: false },
+                    { label: "Projects", href: `/${activeOrgId}/projects`, active: true },
                 ]}
                 rightElement={<div>
                     <CreateProjectDialog />
@@ -199,7 +203,7 @@ export default function ProjectsPage() {
                         className="border-0 rounded-b-none shadow-none"
                         headerClassName="bg-transparent h-12 border-t border-b border-border"
                         emptyMessage="No projects found."
-                        onRowClick={(row) => router.push(`/dashboard/projects/${row.id}`)}
+                        onRowClick={(row) => router.push(`/${activeOrgId}/projects/${row.id}`)}
                         rowClassName={"cursor-pointer"}
                         sortable
                         defaultSortKey="name"

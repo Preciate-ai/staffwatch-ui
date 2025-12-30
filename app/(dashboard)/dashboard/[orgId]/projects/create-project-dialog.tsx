@@ -2,6 +2,7 @@
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useWorkspace } from "@/components/providers/workspace-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,6 +34,7 @@ export function CreateProjectDialog() {
     const [open, setOpen] = useState(false);
     const createProjectMutation = useCreateProject();
 
+    const { activeOrgId } = useWorkspace();
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -40,8 +42,9 @@ export function CreateProjectDialog() {
         },
         validationSchema: CreateProjectSchema,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
+            if (!activeOrgId) return;
             try {
-                await createProjectMutation.mutateAsync(values);
+                await createProjectMutation.mutateAsync({ ...values, organizationId: activeOrgId });
                 setOpen(false);
                 resetForm();
             } catch (error) {

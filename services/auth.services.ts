@@ -32,6 +32,8 @@ export const useLogin = () => {
             setCookie(null, cookieKey, data.credentials.access.token, {
                 path: "/",
             });
+
+
         },
     });
 };

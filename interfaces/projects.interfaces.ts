@@ -1,6 +1,7 @@
 export interface CreateProjectPayload {
     name: string;
     description?: string;
+    organizationId?: string;
     // Add other fields as necessary
 }
 

@@ -20,8 +20,8 @@ export default function LoginPage() {
         },
         validationSchema: loginSchema,
         onSubmit: async (values) => {
-            await loginMutation.mutateAsync(values);
-            router.push("/dashboard");
+            const { organization } = await loginMutation.mutateAsync(values);
+            router.push(`/dashboard/${organization?.id}`);
         },
     });
 

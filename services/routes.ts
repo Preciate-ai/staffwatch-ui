@@ -10,11 +10,13 @@ export const routes = {
         refreshToken: "/auth/refresh-tokens",
     },
     organization: {
-        index: "/organization",
+        index: "/organizations",
+        me: "/organizations/me"
     },
     projects: {
         index: "/projects",
         invite: "/invite", // Used as suffix
+        me: "/projects/me"
     },
     users: {
         index: "/users",
