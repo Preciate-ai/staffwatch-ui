@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/page-header"
 import clsx from "clsx"
 import Staff from "./staff/Staff"
 import { Button } from "@/components/ui/button"
+import { AddStaffMember } from "../../users/add-staff-member-dialog"
 
 export default function ProjectDetailsPage() {
     const params = useParams()
@@ -108,6 +109,7 @@ export default function ProjectDetailsPage() {
                     { label: project.name, href: `/dashboard/projects/${project.id}`, active: true },
                 ]}
                 rightElement={<div>
+                    <AddStaffMember projectId={project.id} />
                 </div>}
             />
             <div className="px-0">

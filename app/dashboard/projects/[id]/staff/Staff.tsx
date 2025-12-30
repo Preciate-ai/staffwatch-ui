@@ -1,6 +1,6 @@
-import { Project, ProjectMember, GetProjectMembersQuery } from '@/interfaces/projects.interfaces'
-import React, { useState, useEffect } from 'react'
-import { useGetProjectMembers } from '@/services/projects.services'
+import { Project, ProjectMember, GetProjectMembersQuery, ProjectMemberRole } from '@/interfaces/projects.interfaces'
+import React, { useState, useEffect, useCallback } from 'react'
+import { useGetProjectMembers, useResendInviteUser } from '@/services/projects.services'
 import Table, { TableColumn } from "@/components/ui/data-table";
 import { Input } from "@/components/ui/input";
 import TablePagination from "@/components/ui/table-pagination";
@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { StaffFilters } from '../StaffFilters';
 import { useRouter } from 'next/navigation';
+import { useRowLoading } from '@/hooks/useRowLoading';
 
 export default function Staff({ project }: { project: Project }) {
     const router = useRouter();
@@ -48,8 +49,22 @@ export default function Staff({ project }: { project: Project }) {
         status: statusFilter === "all" ? undefined : statusFilter,
     };
 
-    const { data: projectMembersData, isLoading } = useGetProjectMembers(project.id, query);
+    const { isLoading: checkIsLoading, start, stop } = useRowLoading()
 
+    const { data: projectMembersData, isLoading } = useGetProjectMembers(project.id, query);
+    const { mutate: resendInviteUser } = useResendInviteUser()
+
+    const handleResendInvite = useCallback(({ email, role }: { email: string, role: ProjectMemberRole }) => {
+        start(email)
+        resendInviteUser({
+            projectId: project.id,
+            members: [{
+                email,
+                role,
+            }]
+        })
+        stop(email)
+    }, [])
     const members = projectMembersData?.results || [];
     const totalResults = projectMembersData?.totalResults || 0;
 
@@ -82,19 +97,19 @@ export default function Staff({ project }: { project: Project }) {
                 return (
                     <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                            <AvatarImage src={member.user.avatar} alt={member.user.name} />
-                            <AvatarFallback>{member.user.name.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={member.user?.avatar} alt={member?.user?.name} />
+                            <AvatarFallback>{member?.user?.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
                             <div className="flex items-center gap-2">
-                                <span className="font-medium text-sm">{member.user.name}</span>
+                                <span className="font-medium text-sm">{member?.user?.name}</span>
                                 {isMe && (
                                     <Badge variant="secondary" className="text-[10px] h-4 px-1 py-0 border-border bg-muted text-muted-foreground hover:bg-muted cursor-default">
                                         You
                                     </Badge>
                                 )}
                             </div>
-                            <span className="text-xs text-muted-foreground">{member.user.email}</span>
+                            <span className="text-xs text-muted-foreground">{member?.user?.email}</span>
                         </div>
                     </div>
                 )
@@ -132,7 +147,7 @@ export default function Staff({ project }: { project: Project }) {
             width: "150px",
             render: (date) => (
                 <span className="text-sm text-muted-foreground">
-                    {DateTime.fromISO(date as string).toFormat("MMM d, yyyy")}
+                    {DateTime.fromISO(date as string).toFormat("MM/dd/yyyy")}
                 </span>
             )
         },
@@ -148,13 +163,15 @@ export default function Staff({ project }: { project: Project }) {
                     <div onClick={(e) => e.stopPropagation()}>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                <Button loading={checkIsLoading(member.user?.email)} variant="ghost" className="h-8 w-8 p-0">
                                     <span className="sr-only">Open menu</span>
                                     <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-[160px]">
-                                <DropdownMenuItem>Edit member</DropdownMenuItem>
+                                {member.status === "invited" ? (
+                                    <DropdownMenuItem onClick={() => handleResendInvite({ email: member.user?.email, role: member.role })}>Resend invitation</DropdownMenuItem>
+                                ) : (<DropdownMenuItem>Edit member</DropdownMenuItem>)}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem className="text-destructive focus:text-destructive">
                                     Remove member

@@ -55,7 +55,7 @@ export const useGetProject = (projectId: string) => {
 
 export const useInviteUser = (projectId: string) => {
     return useMutation({
-        mutationFn: async (payload: InviteUserPayload) => {
+        mutationFn: async (payload: { members: InviteUserPayload[] }) => {
             const data = await http.post({
                 url: `${routes.projects.index}/${projectId}${routes.projects.invite}`,
                 body: payload,
@@ -64,6 +64,24 @@ export const useInviteUser = (projectId: string) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+            queryClient.invalidateQueries({ queryKey: ["project-members", projectId, { status: "invited" }] });
+        },
+    });
+};
+
+
+export const useResendInviteUser = () => {
+    return useMutation({
+        mutationFn: async ({ projectId, ...payload }: { members: InviteUserPayload[], projectId: string }) => {
+            const data = await http.post({
+                url: `${routes.projects.index}/${projectId}${routes.projects.invite}`,
+                body: payload,
+            });
+            return data;
+        },
+        onSuccess: (_, { projectId }) => {
+            queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+            queryClient.invalidateQueries({ queryKey: ["project-members", projectId, { status: "invited" }] });
         },
     });
 };
@@ -72,7 +90,7 @@ export const useGetProjectMembers = (projectId: string, query?: GetProjectMember
         queryKey: ["project-members", projectId, query],
         queryFn: async () => {
             const data = await http.get({
-                url: `${routes.projects.index}/${projectId}/members`,
+                url: `${routes.projects.index}/${projectId}/${query?.status === "invited" ? "invitations" : "members"}`,
                 query,
             });
             return data as GetProjectMembersResponse;

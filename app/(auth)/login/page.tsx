@@ -59,8 +59,8 @@ export default function LoginPage() {
                         )}
                     </div>
                 </CardContent>
-                <CardFooter className="flex flex-col gap-4">
-                    <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                <CardFooter className="flex mt-2 flex-col gap-4">
+                    <Button type="submit" className="w-full" loading={loginMutation.isPending} disabled={loginMutation.isPending}>
                         {loginMutation.isPending ? "Signing in..." : "Sign In"}
                     </Button>
                     <div className="text-center text-sm text-muted-foreground">

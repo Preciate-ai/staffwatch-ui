@@ -6,8 +6,7 @@ export interface CreateProjectPayload {
 
 export interface InviteUserPayload {
     email: string;
-    role: string;
-    // Add other fields as necessary
+    role: ProjectMemberRole;
 }
 
 export enum ProjectStatus {
@@ -34,6 +33,13 @@ export interface ProjectDetails extends Project {
     membersCount: number;
 }
 
+export enum ProjectMemberRole {
+    OWNER = 'owner',
+    MANAGER = 'manager',
+    MEMBER = 'member',
+    VIEWER = 'viewer'
+}
+
 export interface GetProjectsResponse {
     results: Project[];
     page: number;
@@ -45,7 +51,7 @@ export interface ProjectMember {
     id: string;
     userId: string;
     projectId: string;
-    role: string;
+    role: ProjectMemberRole;
     status: string;
     createdAt: string;
     user: {

@@ -11,9 +11,6 @@ export default function UsersPage() {
                     <h2 className="text-3xl font-bold tracking-tight">Users</h2>
                     <p className="text-muted-foreground">Manage your team members and roles.</p>
                 </div>
-                <Button className="gap-2">
-                    <Plus className="h-4 w-4" /> Invite User
-                </Button>
             </div>
 
             <div className="space-y-4">
