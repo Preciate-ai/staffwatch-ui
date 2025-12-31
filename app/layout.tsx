@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google"; // Import Outfit and Inter
+import React from "react";
+
 import "./globals.css";
 import { Providers } from "./providers"; // We will create this
 
@@ -23,7 +25,9 @@ export default function RootLayout({
       >
         <div className="flex flex-col min-h-screen">
           <Providers>
-            {children}
+            <React.Suspense fallback={<div>Loading...</div>}>
+              {children}
+            </React.Suspense>
           </Providers>
         </div>
       </body>
