@@ -17,7 +17,8 @@ export const routes = {
     projects: {
         index: "/projects",
         invite: "/invite", // Used as suffix
-        me: "/projects/me"
+        me: "/projects/me",
+        meInternal: "/internal/projects",
     },
     users: {
         index: "/users",

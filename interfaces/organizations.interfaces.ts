@@ -23,3 +23,9 @@ export interface OrganizationMember {
     permissionOverrides: PermissionOverrides;
     organization: Organization;
 }
+
+export interface GetInternalOrganizationsParams {
+    page?: number;
+    limit?: number;
+    search?: string;
+}

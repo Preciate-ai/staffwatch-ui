@@ -61,34 +61,7 @@ export function ToolsPanel() {
                                 <Shield className="h-3.5 w-3.5 text-muted-foreground" />
                                 Security Audit
                             </Button>
-                            <Button variant="ghost" className="justify-start gap-2 h-8 px-2 text-xs font-normal hover:bg-muted/60">
-                                <Terminal className="h-3.5 w-3.5 text-muted-foreground" />
-                                System Logs
-                            </Button>
                         </div>
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-xs font-medium text-foreground">Platform Status</h4>
-                            <Badge variant="outline" className="text-[10px] h-4 px-1 py-0 border-green-200 text-green-700 bg-green-50">Operational</Badge>
-                        </div>
-                        <Card className="rounded-md border shadow-none bg-muted/20">
-                            <CardContent className="p-3 space-y-2">
-                                <div className="flex items-center justify-between text-[10px]">
-                                    <span className="text-muted-foreground">Uptime (30d)</span>
-                                    <span className="font-mono">99.99%</span>
-                                </div>
-                                <div className="flex items-center justify-between text-[10px]">
-                                    <span className="text-muted-foreground">Current Load</span>
-                                    <span className="font-mono text-green-600">Low</span>
-                                </div>
-                                <div className="flex items-center justify-between text-[10px]">
-                                    <span className="text-muted-foreground">Version</span>
-                                    <span className="font-mono">v2.4.0</span>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
                 </div>
             </div>

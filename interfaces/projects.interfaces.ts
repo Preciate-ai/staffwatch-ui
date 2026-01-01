@@ -1,3 +1,5 @@
+import { Organization } from "./organizations.interfaces";
+
 export interface CreateProjectPayload {
     name: string;
     description?: string;
@@ -24,6 +26,7 @@ export interface IProject {
 
 export interface Project extends IProject {
     id: string;
+    organization: Organization
     createdAt: string;
     updatedAt: string;
 }

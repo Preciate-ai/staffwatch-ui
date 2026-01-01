@@ -15,7 +15,7 @@ import {
     SidebarGroupLabel,
     useSidebar,
 } from "@/components/ui/sidebar"
-import { LayoutDashboard, Folder, ChevronsUpDown, LogOut, User, Building2, ShieldCheck, History, Activity, Flag, ScrollText, BookOpen, LifeBuoy } from "lucide-react"
+import { LayoutDashboard, Folder, ChevronsUpDown, LogOut, User, Building2, ShieldCheck, History, Activity, Flag, ScrollText, BookOpen, LifeBuoy, Users } from "lucide-react"
 import { useRouter, usePathname } from "next/navigation"
 import { Logo } from "../ui/logo"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -77,6 +77,11 @@ export function InternalSidebar({ ...props }: React.ComponentProps<typeof Sideba
         {
             label: "Governance",
             items: [
+                {
+                    title: "Teams",
+                    url: `/internal/teams`,
+                    icon: Users,
+                },
                 {
                     title: "Roles & Permissions",
                     url: `/internal/roles-and-permissions`,

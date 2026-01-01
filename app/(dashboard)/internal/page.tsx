@@ -28,7 +28,6 @@ export default function InternalDashboardPage() {
 
                         <div className="space-y-6">
                             <PendingApprovals />
-                            <SystemHealth />
                         </div>
                     </div>
                 </div>

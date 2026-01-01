@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { CreateOrganizationForm } from "@/components/forms/organizations/create-organization-form";
+import { CreateProjectForm } from "@/components/forms/projects/create-project-form";
 
 import { cn } from "@/lib/utils";
 
@@ -29,8 +30,8 @@ export function ActionsModal() {
         case "create-project":
             title = "Create New Project";
             description = "Start a new project from scratch.";
-            sizeClass = "sm:max-w-[800px]"; // Wider for project creation
-            content = <div className="p-4 border border-dashed rounded-md bg-muted/50 text-center text-sm text-muted-foreground">Project creation form will go here</div>;
+            sizeClass = "sm:max-w-[600px]";
+            content = <CreateProjectForm onClose={handleClose} />;
             break;
         case "create-organization":
             title = "Register New Organization";

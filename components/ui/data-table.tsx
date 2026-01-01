@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import SortIcon from "./SortIcon";
 import SkeletonRow from "./SkeletonRow";
+import { Checkbox } from "@/components/ui/checkbox";
 
 /**
  * Column configuration for the generic `Table`.
@@ -91,6 +92,12 @@ export interface TableProps<T = any> {
     /** Provide a stable key for each row; defaults to array index */
     rowKey?: (row: T, index: number) => React.Key;
     minTableWidth?: string;
+
+    /** Selection props */
+    enableSelection?: boolean;
+    selectedRows?: Map<string, T>;
+    onSelectRow?: (row: T, isSelected: boolean) => void;
+    onSelectAll?: (isSelected: boolean) => void;
 }
 
 // Main Table component
@@ -121,6 +128,10 @@ const Table = <T extends Record<string, any>>({
     onRowClick,
     rowKey,
     minTableWidth,
+    enableSelection = false,
+    selectedRows,
+    onSelectRow,
+    onSelectAll,
 }: TableProps<T>) => {
     /**
      * Uncontrolled sorting state.
@@ -143,6 +154,41 @@ const Table = <T extends Record<string, any>>({
             setSortOrder(controlledSortOrder);
         }
     }, [controlledSortOrder]);
+
+    const isAllSelected = useMemo(() => {
+        if (!enableSelection || !selectedRows || data.length === 0) return false;
+        // Check if all current page rows are in the selection map
+        // This requires rowKey to be defined
+        if (!rowKey) return false;
+
+        return data.every((row, index) => {
+            const key = String(rowKey(row, index));
+            return selectedRows.has(key);
+        });
+    }, [enableSelection, selectedRows, data, rowKey]);
+
+    const isIndeterminate = useMemo(() => {
+        if (!enableSelection || !selectedRows || data.length === 0) return false;
+        if (!rowKey) return false;
+
+        const selectedCount = data.filter((row, index) => {
+            const key = String(rowKey(row, index));
+            return selectedRows.has(key);
+        }).length;
+
+        return selectedCount > 0 && selectedCount < data.length;
+    }, [enableSelection, selectedRows, data, rowKey]);
+
+    const handleSelectAll = () => {
+        onSelectAll?.(!isAllSelected);
+    };
+
+    const handleSelectRow = (row: T, index: number) => {
+        if (!rowKey || !onSelectRow) return;
+        const key = String(rowKey(row, index));
+        const isSelected = selectedRows?.has(key) || false;
+        onSelectRow(row, !isSelected);
+    };
 
     /**
      * Handle header click to toggle sort on a specific column.
@@ -309,6 +355,15 @@ const Table = <T extends Record<string, any>>({
                 {/* Table Header */}
                 <thead className={headerClasses}>
                     <tr>
+                        {enableSelection && (
+                            <th className={twMerge(headerCellClasses, "w-[40px] px-2")}>
+                                <Checkbox
+                                    checked={isAllSelected || (isIndeterminate ? "indeterminate" : false)}
+                                    onCheckedChange={handleSelectAll}
+                                    aria-label="Select all"
+                                />
+                            </th>
+                        )}
                         {columns?.map((column, index) => (
                             <th
                                 key={index}
@@ -359,7 +414,7 @@ const Table = <T extends Record<string, any>>({
                         // Empty state
                         <tr>
                             <td
-                                colSpan={columns.length}
+                                colSpan={columns.length + (enableSelection ? 1 : 0)}
                                 className="px-4 py-12 text-center text-muted-foreground"
                             >
                                 <div className="flex flex-col items-center justify-center space-y-3">
@@ -395,6 +450,15 @@ const Table = <T extends Record<string, any>>({
                                 )}
                                 onClick={onRowClick ? () => onRowClick(row, index) : undefined}
                             >
+                                {enableSelection && (
+                                    <td className={twMerge(cellClasses, "w-[40px] px-2 text-center")} onClick={(e) => e.stopPropagation()}>
+                                        <Checkbox
+                                            checked={selectedRows?.has(String(rowKey ? rowKey(row, index) : index)) || false}
+                                            onCheckedChange={() => handleSelectRow(row, index)}
+                                            aria-label="Select row"
+                                        />
+                                    </td>
+                                )}
                                 {columns?.map((column, colIndex) => {
                                     const value = getCellValue(row, column);
                                     // Default rendering behior:

@@ -11,6 +11,7 @@ import {
     GetProjectMembersResponse,
     GetProjectMembersQuery,
 } from "@/interfaces/projects.interfaces";
+import { invalidateActivityLogs } from "@/services/activity-logs";
 
 export const useCreateProject = () => {
     return useMutation({
@@ -23,6 +24,37 @@ export const useCreateProject = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["projects"] });
+            invalidateActivityLogs();
+        },
+    });
+};
+
+
+export const useCreateProjectInternal = () => {
+    return useMutation({
+        mutationFn: async (payload: CreateProjectPayload) => {
+            const data = await http.post({
+                url: routes.projects.meInternal,
+                body: payload,
+            });
+            return data as Project;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["projects"] });
+            invalidateActivityLogs();
+        },
+    });
+};
+
+export const useGetInternalProjects = (query?: Record<string, any>) => {
+    return useQuery({
+        queryKey: ["internal-projects", query],
+        queryFn: async () => {
+            const data = await http.get({
+                url: routes.projects.meInternal,
+                query,
+            });
+            return data as GetProjectsResponse;
         },
     });
 };

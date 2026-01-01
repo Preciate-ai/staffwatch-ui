@@ -25,7 +25,7 @@ const columns: TableColumn<IActivityLog & { createdAt?: string, id?: string }>[]
         key: "description",
         width: "250px",
         render: (value) => (
-            <span className="text-sm text-foreground/80 truncate block max-w-[300px]" title={value}>
+            <span className="text-xs text-foreground/80 truncate block max-w-[300px]" title={value}>
                 {value}
             </span>
         ),
