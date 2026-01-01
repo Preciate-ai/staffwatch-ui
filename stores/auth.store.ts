@@ -13,6 +13,8 @@ export const useAuthStore = create(
             setOrganization: (obj) => {
                 set({ organization: obj });
             },
+            setPermissions: (permissions) => set({ permissions }),
+            clearStore: () => set({ account: undefined, access: undefined, refresh: undefined, organization: undefined, permissions: undefined }),
         }),
         {
             name: "sw-auth-storage",

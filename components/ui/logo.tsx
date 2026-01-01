@@ -7,9 +7,10 @@ const outfit = Outfit({ subsets: ["latin"] });
 interface LogoProps {
     className?: string;
     size?: "sm" | "md" | "lg";
+    iconOnly?: boolean;
 }
 
-export function Logo({ className, size = "md" }: LogoProps) {
+export function Logo({ className, size = "md", iconOnly = false }: LogoProps) {
     const sizeClasses = {
         sm: "text-lg",
         md: "text-2xl",
@@ -39,9 +40,9 @@ export function Logo({ className, size = "md" }: LogoProps) {
                     <path d="m4.9 4.9 2.9 2.9" />
                 </svg>
             </div>
-            <span className={cn("font-bold tracking-tight text-primary", outfit.className, sizeClasses[size])}>
+            {!iconOnly && <span className={cn("font-bold tracking-tight text-primary", outfit.className, sizeClasses[size])}>
                 Staffwatch
-            </span>
+            </span>}
         </div>
     );
 }

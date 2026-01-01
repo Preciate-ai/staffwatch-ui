@@ -12,6 +12,7 @@ export interface LoginResultInterface {
     account: Account;
     organization?: Organization | null;
     credentials: Access;
+    permissions: string[];
 }
 
 export interface RefreshTokensPayloadInterface {
@@ -41,7 +42,10 @@ export interface Account {
     id: string;
     name: string;
     email: string;
-    role: "client" | "internal";
+    role?: string;
+    accountType?: 'client' | 'internal';
+    isVerified?: boolean;
+    status?: 'active' | 'disabled';
 }
 
 export interface QueryResult {
@@ -65,10 +69,13 @@ export interface authStore {
     refresh?: TokenPayload;
     account?: Account;
     organization?: Organization;
+    permissions?: string[];
 }
 
 export interface IAuthStore extends authStore {
     setAccount: (payload: Account) => void;
     setAccess: (payload: Access) => void;
     setOrganization: (payload: Organization) => void;
+    setPermissions: (payload: string[]) => void;
+    clearStore: () => void;
 }

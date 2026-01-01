@@ -11,7 +11,8 @@ export const routes = {
     },
     organization: {
         index: "/organizations",
-        me: "/organizations/me"
+        me: "/organizations/me",
+        internalCreate: "/internal/organizations",
     },
     projects: {
         index: "/projects",
@@ -20,9 +21,17 @@ export const routes = {
     },
     users: {
         index: "/users",
+        meInternal: "/internal/users/me",
+        meClient: "/client/users/me",
     },
     sessions: {
         index: "/sessions",
         aggregated: "/aggregated",
     },
+    activityLogs: {
+        latest: "/internal/activity-logs/latest",
+    },
+    analytics: {
+        stats: "/internal/analytics/stats",
+    }
 }

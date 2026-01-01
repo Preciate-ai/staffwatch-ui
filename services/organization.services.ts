@@ -18,3 +18,15 @@ export const useGetMyOrganizations = () => {
         },
     });
 };
+
+export const useCreateInternalOrganization = () => {
+    return useMutation({
+        mutationFn: async (payload: any) => {
+            const data = await http.post({
+                url: routes.organization.internalCreate,
+                body: payload,
+            });
+            return data;
+        },
+    });
+};

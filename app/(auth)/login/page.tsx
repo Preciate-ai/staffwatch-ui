@@ -20,8 +20,12 @@ export default function LoginPage() {
         },
         validationSchema: loginSchema,
         onSubmit: async (values) => {
-            const { organization } = await loginMutation.mutateAsync(values);
-            router.push(`/dashboard/${organization?.id}`);
+            const { account, organization, credentials, permissions } = await loginMutation.mutateAsync(values);
+            if (account.accountType === "client") {
+                router.push(`/dashboard/${organization?.id}`);
+            } else {
+                router.push(`/internal`);
+            }
         },
     });
 

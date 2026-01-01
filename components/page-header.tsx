@@ -9,6 +9,8 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import React from "react"
+import { NotificationsTrigger } from "@/components/notifications/notifications-trigger"
+import { GlobalSearch } from "@/components/global-search"
 
 interface BreadcrumbItem {
     label: string
@@ -54,7 +56,13 @@ export function PageHeader({ title, breadcrumbs, rightElement }: PageHeaderProps
                     )}
                 </div>
             </div>
-            {rightElement}
+            <div className="flex items-center gap-2">
+                <div className="w-64">
+                    <GlobalSearch />
+                </div>
+                <NotificationsTrigger />
+                {rightElement}
+            </div>
         </header>
     )
 }

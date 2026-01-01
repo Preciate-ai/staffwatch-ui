@@ -13,7 +13,7 @@ import {
 import { cookieKey, useAuthStore } from "@/stores/auth.store";
 
 export const useLogin = () => {
-    const { setAccount, setAccess, setOrganization } = useAuthStore();
+    const { setAccount, setAccess, setOrganization, setPermissions } = useAuthStore();
 
     return useMutation({
         mutationFn: async (payload: LoginPayloadInterface) => {
@@ -26,8 +26,14 @@ export const useLogin = () => {
         onSuccess: (data) => {
             setAccount(data.account);
             setAccess(data.credentials);
-            if (data.organization) {
+            if (data.account.accountType === "client" && data.organization) {
                 setOrganization(data.organization);
+            }
+            if (data.account.accountType === "internal" && data.permissions) {
+                setPermissions(data.permissions);
+                setCookie(null, "PERMISSIONS", JSON.stringify(data.permissions), {
+                    path: "/",
+                });
             }
             setCookie(null, cookieKey, data.credentials.access.token, {
                 path: "/",
@@ -51,7 +57,7 @@ export const useRegister = () => {
 };
 
 export const useVerify = () => {
-    const { setAccount, setAccess, setOrganization } = useAuthStore();
+    const { setAccount, setAccess, setOrganization, setPermissions } = useAuthStore();
 
     return useMutation({
         mutationFn: async (payload: VerifyPayloadInterface) => {
@@ -64,8 +70,14 @@ export const useVerify = () => {
         onSuccess: (data) => {
             setAccount(data.account);
             setAccess(data.credentials);
-            if (data.organization) {
+            if (data.account.accountType === "client" && data.organization) {
                 setOrganization(data.organization);
+            }
+            if (data.account.accountType === "internal" && data.permissions) {
+                setPermissions(data.permissions);
+                setCookie(null, "PERMISSIONS", JSON.stringify(data.permissions), {
+                    path: "/",
+                });
             }
             setCookie(null, cookieKey, data.credentials.access.token, {
                 path: "/",
