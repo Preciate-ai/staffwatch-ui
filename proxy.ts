@@ -1,10 +1,10 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cookieKey } from "./stores/auth.store";
 
-const cookieKey = "AUTH_TOKEN_STAFFWATCH";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const accessToken = request.cookies.get(cookieKey)?.value;
     const { pathname } = request.nextUrl;
 

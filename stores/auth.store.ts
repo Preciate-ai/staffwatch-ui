@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { IAuthStore } from "@/interfaces/auth.interfaces";
-export const cookieKey = "AUTH_TOKEN_STAFFWATCH";
+export const cookieKey = "AUTH_TOKEN_TRACKUP";
 
 export const useAuthStore = create(
     persist<IAuthStore>(
