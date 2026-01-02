@@ -18,7 +18,7 @@ export default function DashboardPage() {
             <div className="p-4 lg:p-6 space-y-6">
                 <div>
                     <h2 className="text-3xl font-bold tracking-tight">Overview</h2>
-                    <p className="text-muted-foreground">Welcome back to Staffwatch.</p>
+                    <p className="text-muted-foreground">Welcome back to Trackup.</p>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <Card>

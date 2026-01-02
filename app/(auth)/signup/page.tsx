@@ -34,7 +34,7 @@ export default function SignupPage() {
             <CardHeader className="space-y-1">
                 <CardTitle className="text-2xl text-center">Create an account</CardTitle>
                 <CardDescription className="text-center">
-                    Get started with Staffwatch today
+                    Get started with Trackup today
                 </CardDescription>
             </CardHeader>
             <form onSubmit={formik.handleSubmit}>
