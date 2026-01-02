@@ -59,6 +59,19 @@ export const useGetInternalProjects = (query?: Record<string, any>) => {
     });
 };
 
+export const useGetInternalProject = (projectId: string) => {
+    return useQuery({
+        queryKey: ["internal-project", projectId],
+        queryFn: async () => {
+            const data = await http.get({
+                url: `${routes.projects.meInternal}/${projectId}`,
+            });
+            return data as ProjectDetails;
+        },
+        enabled: !!projectId,
+    });
+};
+
 export const useGetProjects = (query?: Record<string, any>) => {
     return useQuery({
         queryKey: ["projects", query],

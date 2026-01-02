@@ -24,6 +24,11 @@ export const routes = {
         index: "/users",
         meInternal: "/internal/users/me",
         meClient: "/client/users/me",
+        internal: "/internal/users",
+        internalResetPassword: (id: string) => `/internal/users/${id}/reset-password`,
+        internalDisable: (id: string) => `/internal/users/${id}/disable`,
+        internalRestore: (id: string) => `/internal/users/${id}/restore`,
+        internalUpdate: (id: string) => `/internal/users/${id}`,
     },
     sessions: {
         index: "/sessions",
@@ -34,5 +39,8 @@ export const routes = {
     },
     analytics: {
         stats: "/internal/analytics/stats",
+    },
+    rbac: {
+        roles: "/internal/rbac/roles",
     }
 }

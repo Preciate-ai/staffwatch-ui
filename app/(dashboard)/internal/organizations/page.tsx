@@ -115,6 +115,7 @@ export default function InternalOrganizationsPage() {
                         loading={isLoading}
                         rowKey={(row) => row.id}
                         emptyMessage="No organizations found."
+                        onRowClick={(row) => window.location.href = `/internal/organizations/${row.id}/projects`}
                     />
 
                     <TablePagination

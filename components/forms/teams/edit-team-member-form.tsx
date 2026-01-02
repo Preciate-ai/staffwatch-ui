@@ -1,0 +1,120 @@
+"use client";
+
+import { useFormik } from "formik";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { DialogFooter } from "@/components/ui/dialog";
+import { SelectControlled } from "@/components/ui/select-controlled";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import * as Yup from "yup";
+import { useUpdateInternalUser } from "@/services/users";
+import { useFetchRoles } from "@/services/rbac";
+import { useState } from "react";
+
+interface EditTeamMemberFormProps {
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        role: string;
+    };
+    onClose: () => void;
+    onSuccess?: () => void;
+}
+
+const editUserSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    role: Yup.string().required("Role is required"),
+});
+
+export function EditTeamMemberForm({ user, onClose, onSuccess }: EditTeamMemberFormProps) {
+    const [roleSearch, setRoleSearch] = useState("");
+    const { mutateAsync: updateUser, isPending: isUpdating } = useUpdateInternalUser();
+    const { data: rolesData } = useFetchRoles();
+
+    // Map roles to { id, label } format
+    const roles = Array.isArray(rolesData) ? rolesData.map((r: any) => ({
+        id: r.name,
+        label: r.label || r.name
+    })) : [];
+
+    const formik = useFormik({
+        initialValues: {
+            name: user.name,
+            email: user.email,
+            role: user.role
+        },
+        validationSchema: editUserSchema,
+        onSubmit: async (values) => {
+            try {
+                await updateUser({ id: user.id, data: values });
+                toast.success("User updated successfully");
+                onClose();
+                if (onSuccess) {
+                    onSuccess();
+                }
+            } catch (err: any) {
+                toast.error(err?.response?.data?.message || "Failed to update user");
+            }
+        }
+    });
+
+    return (
+        <form onSubmit={formik.handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+                <Label>Name</Label>
+                <Input
+                    name="name"
+                    placeholder="John Doe"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.name && formik.errors.name && (
+                    <p className="text-red-500 text-sm">{formik.errors.name}</p>
+                )}
+            </div>
+            <div className="space-y-2">
+                <Label>Email</Label>
+                <Input
+                    name="email"
+                    placeholder="john@example.com"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                />
+                {formik.touched.email && formik.errors.email && (
+                    <p className="text-red-500 text-sm">{formik.errors.email}</p>
+                )}
+            </div>
+            <div className="space-y-2">
+                <Label>Role</Label>
+                <SelectControlled
+                    mode="single"
+                    items={roles.filter(r => r.label.toLowerCase().includes(roleSearch.toLowerCase()))}
+                    onSearch={setRoleSearch}
+                    getId={(item) => item.id}
+                    getLabel={(item) => item.label}
+                    value={roles.find(r => r.id === formik.values.role)}
+                    onChange={(val) => formik.setFieldValue('role', val?.id)}
+                    placeholder="Select a role"
+                    searchable={true}
+                />
+                {formik.touched.role && formik.errors.role && (
+                    <p className="text-red-500 text-sm">{formik.errors.role}</p>
+                )}
+            </div>
+
+            <DialogFooter>
+                <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+                <Button type="submit" disabled={isUpdating}>
+                    {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Save Changes
+                </Button>
+            </DialogFooter>
+        </form>
+    );
+}

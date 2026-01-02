@@ -78,6 +78,26 @@ export function SelectControlled<T>(
 
     const [open, setOpen] = React.useState(false)
     const [search, setSearch] = React.useState("")
+    const triggerRef = React.useRef<HTMLButtonElement>(null)
+    const [width, setWidth] = React.useState(0)
+
+    React.useLayoutEffect(() => {
+        if (triggerRef.current) {
+            setWidth(triggerRef.current.offsetWidth)
+        }
+    }, [triggerRef.current, open])
+
+    // Window resize handler to keep width in sync
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (triggerRef.current) {
+                setWidth(triggerRef.current.offsetWidth)
+            }
+        }
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
 
     // Debounce the search emission to parent
     React.useEffect(() => {
@@ -148,13 +168,20 @@ export function SelectControlled<T>(
     // Trigger label(s)
     const chipPreviewCount = !isSingle ? (multi.chipPreviewCount ?? 3) : 1
 
+    const toSentenceCase = (str: string) => {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
+                    ref={triggerRef}
                     type="button"
                     variant="outline"
                     role="combobox"
+                    id="trigger-box"
                     aria-expanded={open}
                     className={cn(
                         "w-full justify-between overflow-hidden",
@@ -170,7 +197,7 @@ export function SelectControlled<T>(
                             <div className="flex flex-wrap gap-1 min-w-0">
                                 {selectedArray.slice(0, chipPreviewCount).map((it) => {
                                     const id = getId(it)
-                                    const label = getLabel(it)
+                                    const label = toSentenceCase(getLabel(it))
                                     return (
                                         <Badge key={id} variant="secondary" className="font-medium">
                                             {label}
@@ -211,7 +238,8 @@ export function SelectControlled<T>(
             </PopoverTrigger>
 
             <PopoverContent
-                className={cn("p-2 w-md sm:w-lg", popoverClassName)}
+                className={cn("p-2", popoverClassName)}
+                style={{ width: width ? `${width}px` : 'auto' }}
                 align="start"
             >
                 {/* Search */}
@@ -244,7 +272,7 @@ export function SelectControlled<T>(
                             <ul className="space-y-1">
                                 {items.map((it) => {
                                     const id = getId(it)
-                                    const label = getLabel(it)
+                                    const label = toSentenceCase(getLabel(it))
                                     const checked = isSelected(id)
                                     const disableThis =
                                         !isSingle && !!multi.maxSelected && !checked && selectedArray.length >= (multi.maxSelected as number)
@@ -264,11 +292,11 @@ export function SelectControlled<T>(
                                                 else multi.onLimitReached?.(multi.maxSelected as number)
                                             }}
                                         >
-                                            <Checkbox
+                                            {!isSingle && <Checkbox
                                                 checked={checked}
                                                 className="pointer-events-none"
                                                 disabled={disableThis}
-                                            />
+                                            />}
                                             <span className="flex-1 truncate text-sm">
                                                 {renderItem ? renderItem(it, checked) : label}
                                             </span>
@@ -294,9 +322,9 @@ export function SelectControlled<T>(
                                 Clear
                             </Button>
                         )}
-                        <Button size="sm" onClick={() => setOpen(false)}>
+                        {!isSingle && <Button size="sm" onClick={() => setOpen(false)}>
                             Done
-                        </Button>
+                        </Button>}
                     </div>
                 </div>
 

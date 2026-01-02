@@ -169,6 +169,7 @@ export default function InternalProjectsPage() {
                         selectedRows={selectedRows}
                         onSelectRow={handleSelectRow}
                         onSelectAll={handleSelectAll}
+                        onRowClick={(row) => window.location.href = `/internal/projects/${row.id}`}
                     />
 
                     <BulkActionsBar
